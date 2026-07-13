@@ -1,86 +1,79 @@
-// ================================
-// MELOSAVE V2
-// ================================
+// ====================================
+// MELOSAVE V2 - PART 1
+// ====================================
 
 // ---------- Notification ----------
 
 function showNotification(message, color = "#6C3EF4") {
 
-    let note = document.getElementById("notification");
+    let notification = document.getElementById("notification");
 
-    if (!note) {
-
-        note = document.createElement("div");
-
-        note.id = "notification";
-
-        document.body.appendChild(note);
-
+    if (!notification) {
+        notification = document.createElement("div");
+        notification.id = "notification";
+        document.body.appendChild(notification);
     }
 
-    note.innerText = message;
-
-    note.style.background = color;
-
-    note.classList.add("show");
+    notification.textContent = message;
+    notification.style.background = color;
+    notification.classList.add("show");
 
     setTimeout(() => {
-
-        note.classList.remove("show");
-
+        notification.classList.remove("show");
     }, 3000);
-
 }
+
 
 // ---------- Theme ----------
 
 const themeBtn = document.getElementById("themeToggle");
 
-if (localStorage.getItem("theme") === "dark") {
-
+if(localStorage.getItem("theme") === "dark"){
     document.body.classList.add("dark-mode");
-
 }
 
-themeBtn?.addEventListener("click", () => {
+themeBtn?.addEventListener("click",()=>{
 
     document.body.classList.toggle("dark-mode");
 
-    if (document.body.classList.contains("dark-mode")) {
+    if(document.body.classList.contains("dark-mode")){
 
-        localStorage.setItem("theme", "dark");
+        localStorage.setItem("theme","dark");
 
-        showNotification("🌙 Dark mode enabled");
+        showNotification("🌙 Dark Mode Enabled");
 
-    } else {
+    }else{
 
-        localStorage.setItem("theme", "light");
+        localStorage.setItem("theme","light");
 
-        showNotification("☀️ Light mode enabled");
+        showNotification("☀️ Light Mode Enabled");
 
     }
 
 });
 
+
 // ---------- Register ----------
 
 const signupForm = document.getElementById("signupForm");
 
-signupForm?.addEventListener("submit", (e) => {
+signupForm?.addEventListener("submit",(e)=>{
 
     e.preventDefault();
 
-    const name = signupForm.querySelectorAll("input")[0].value;
+    const inputs = signupForm.querySelectorAll("input");
 
-    const email = signupForm.querySelectorAll("input")[1].value;
+    const name = inputs[0].value.trim();
 
-    const password = signupForm.querySelectorAll("input")[2].value;
+    const email = inputs[1].value.trim().toLowerCase();
 
-    const confirm = signupForm.querySelectorAll("input")[3].value;
+    const password = inputs[2].value;
 
-    if (password !== confirm) {
+    const confirm = inputs[3].value;
 
-        showNotification("❌ Passwords do not match", "#ff3b30");
+    if(password !== confirm){
+
+        showNotification("❌ Passwords do not match","#ff3b30");
 
         return;
 
@@ -88,41 +81,46 @@ signupForm?.addEventListener("submit", (e) => {
 
     const user = {
 
-        name,
+        name:name,
 
-        email,
+        email:email,
 
-        password,
+        password:password,
 
         income:0,
 
-        expenses:[],
+        expenses:0,
 
-        savings:0
+        savings:0,
+
+        balance:0,
+
+        transactions:[]
 
     };
 
-    localStorage.setItem("melosaveUser", JSON.stringify(user));
+    localStorage.setItem("melosaveUser",JSON.stringify(user));
 
-    showNotification("🎉 Account created successfully!");
+    showNotification("🎉 Welcome to MeloSave, " + name + "!");
 
-    setTimeout(() => {
+    setTimeout(()=>{
 
-        location.href = "login.html";
+        location.href="login.html";
 
-    }, 1500);
+    },1800);
 
 });
+
 
 // ---------- Login ----------
 
 const loginForm = document.getElementById("loginForm");
 
-loginForm?.addEventListener("submit", (e)=>{
+loginForm?.addEventListener("submit",(e)=>{
 
     e.preventDefault();
 
-    const email = loginForm.querySelectorAll("input")[0].value;
+    const email = loginForm.querySelectorAll("input")[0].value.trim().toLowerCase();
 
     const password = loginForm.querySelectorAll("input")[1].value;
 
@@ -130,7 +128,7 @@ loginForm?.addEventListener("submit", (e)=>{
 
     if(!user){
 
-        showNotification("No account found","#ff3b30");
+        showNotification("❌ No account found","#ff3b30");
 
         return;
 
@@ -138,18 +136,78 @@ loginForm?.addEventListener("submit", (e)=>{
 
     if(email===user.email && password===user.password){
 
-        showNotification("👋 Welcome back, "+user.name);
+        localStorage.setItem("loggedIn","true");
+
+        showNotification("👋 Welcome back, " + user.name);
 
         setTimeout(()=>{
 
             location.href="dashboard.html";
 
-        },1500);
+        },1800);
 
     }else{
 
-        showNotification("Incorrect email or password","#ff3b30");
+        showNotification("❌ Incorrect email or password","#ff3b30");
 
     }
 
 });
+
+
+// ---------- Dashboard ----------
+
+const greeting = document.getElementById("greeting");
+
+const user = JSON.parse(localStorage.getItem("melosaveUser"));
+
+if(greeting && user){
+
+    const hour = new Date().getHours();
+
+    let message="";
+
+    if(hour<12){
+
+        message="Good Morning";
+
+    }else if(hour<17){
+
+        message="Good Afternoon";
+
+    }else{
+
+        message="Good Evening";
+
+    }
+
+    greeting.innerHTML=`${message}, ${user.name} 👋`;
+
+}
+
+
+// ---------- Dashboard Numbers ----------
+
+const balance=document.getElementById("balance");
+
+const income=document.getElementById("income");
+
+const expenses=document.getElementById("expenses");
+
+const savings=document.getElementById("savings");
+
+if(user){
+
+    if(balance){
+
+        balance.textContent="₦"+user.balance.toLocaleString();
+
+        income.textContent="₦"+user.income.toLocaleString();
+
+        expenses.textContent="₦"+user.expenses.toLocaleString();
+
+        savings.textContent="₦"+user.savings.toLocaleString();
+
+    }
+
+}
