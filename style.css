@@ -605,3 +605,38 @@ color:#6C3EF4;
 font-weight:bold;
 
 }
+/* LOGIN EXTRA */
+
+.remember{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:25px;
+
+font-size:14px;
+
+}
+
+.remember a{
+
+text-decoration:none;
+
+color:#6C3EF4;
+
+font-weight:600;
+
+}
+
+.remember label{
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+}
