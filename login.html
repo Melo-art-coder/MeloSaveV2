@@ -9,7 +9,7 @@
 
 <title>Log In | MeloSave</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -21,20 +21,115 @@
 
 <body>
 
-<section class="auth-page">
+<div id="notification"></div>
+
+<header class="navbar">
+
+<div class="logo">
+
+<h2>MeloSave💜</h2>
+
+</div>
+
+<div class="nav-buttons">
+
+<button id="themeToggle">🌙</button>
+
+<a href="index.html" class="login-btn">
+Home
+</a>
+
+</div>
+
+</header>
+
+<section class="auth-container">
 
 <div class="auth-card">
 
 <h1>Welcome Back 👋</h1>
 
 <p>
+
 Log in to continue managing your finances.
+
 </p>
 
 <form id="loginForm">
 
 <div class="input-group">
 
+<label>Email Address</label>
+
+<input
+type="email"
+id="loginEmail"
+placeholder="Enter your email"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Password</label>
+
+<input
+type="password"
+id="loginPassword"
+placeholder="Enter your password"
+required>
+
+</div>
+
+<div class="remember-row">
+
+<label>
+
+<input type="checkbox">
+
+Remember Me
+
+</label>
+
+<a href="#">
+
+Forgot Password?
+
+</a>
+
+</div>
+
+<button
+type="submit"
+class="primary-btn">
+
+Log In
+
+</button>
+
+</form>
+
+<div class="auth-footer">
+
+Don't have an account?
+
+<a href="signup.html">
+
+Create Account
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
 <label>Email Address</label>
 
 <input
