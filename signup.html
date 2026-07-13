@@ -1,40 +1,149 @@
-/* ==========================
-AUTH PAGES
-========================== */
+<!DOCTYPE html>
+<html lang="en">
 
-.auth-page{
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-min-height:100vh;
+<title>Create Account | MeloSave</title>
 
-display:flex;
+<link rel="stylesheet" href="style.css">
 
-justify-content:center;
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-align-items:center;
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-padding:40px;
+</head>
 
-background:linear-gradient(135deg,#f8f5ff,#ece3ff);
+<body>
 
-}
+<div id="notification"></div>
 
-.auth-card{
+<header class="navbar">
 
-width:100%;
+<div class="logo">
+<h2>MeloSave💜</h2>
+</div>
 
-max-width:430px;
+<div class="nav-buttons">
 
-background:white;
+<button id="themeToggle">🌙</button>
 
-padding:40px;
+<a href="index.html" class="login-btn">
+Home
+</a>
 
-border-radius:25px;
+</div>
 
-box-shadow:0 20px 40px rgba(108,62,244,.15);
+</header>
 
-animation:fadeUp .8s;
 
-}
+<section class="auth-container">
+
+<div class="auth-card">
+
+<h1>Create Account</h1>
+
+<p>
+Create your MeloSave account and start your financial journey today.
+</p>
+
+<form id="signupForm">
+
+<div class="input-group">
+
+<label>Full Name</label>
+
+<input
+type="text"
+id="name"
+placeholder="Enter your full name"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Email Address</label>
+
+<input
+type="email"
+id="email"
+placeholder="Enter your email"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Password</label>
+
+<input
+type="password"
+id="password"
+placeholder="Create a password"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Confirm Password</label>
+
+<input
+type="password"
+id="confirmPassword"
+placeholder="Confirm password"
+required>
+
+</div>
+
+<div class="checkbox-group">
+
+<input
+type="checkbox"
+required>
+
+<span>
+
+I agree to the Terms & Conditions
+
+</span>
+
+</div>
+
+<button
+type="submit"
+class="primary-btn">
+
+Create Account
+
+</button>
+
+</form>
+
+<div class="auth-footer">
+
+Already have an account?
+
+<a href="login.html">
+
+Log In
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>}
 
 @keyframes fadeUp{
 
