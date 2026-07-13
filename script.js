@@ -1,40 +1,187 @@
-// ====================================
-// MELOSAVE V2 - PART 1
-// ====================================
+// =====================================
+// MELOSAVE PRO V2
+// PART 1: CORE SYSTEM
+// =====================================
 
-// ---------- Notification ----------
 
-function showNotification(message, color = "#6C3EF4") {
+// ================================
+// STORAGE HELPERS
+// ================================
 
-    let notification = document.getElementById("notification");
+function getUsers() {
+    return JSON.parse(localStorage.getItem("meloUsers")) || [];
+}
 
-    if (!notification) {
-        notification = document.createElement("div");
-        notification.id = "notification";
-        document.body.appendChild(notification);
-    }
 
-    notification.textContent = message;
-    notification.style.background = color;
-    notification.classList.add("show");
+function saveUsers(users) {
+    localStorage.setItem("meloUsers", JSON.stringify(users));
+}
+
+
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem("meloCurrentUser")) || null;
+}
+
+
+function saveCurrentUser(user) {
+    localStorage.setItem("meloCurrentUser", JSON.stringify(user));
+}
+
+
+function removeCurrentUser() {
+    localStorage.removeItem("meloCurrentUser");
+}
+
+
+// ================================
+// DEFAULT USER DATA
+// ================================
+
+function createDefaultData() {
+
+    return {
+        income: [],
+        expenses: [],
+        savings: [],
+        transactions: [],
+        budget: 0
+    };
+
+}
+
+
+// ================================
+// NOTIFICATION SYSTEM
+// ================================
+
+function showNotification(message, type = "success") {
+
+    const notification = document.createElement("div");
+
+    notification.className = `notification ${type}`;
+
+    notification.innerText = message;
+
+
+    document.body.appendChild(notification);
+
 
     setTimeout(() => {
-        notification.classList.remove("show");
+        notification.remove();
     }, 3000);
+
 }
 
 
-// ---------- Theme ----------
 
-const themeBtn = document.getElementById("themeToggle");
+// ================================
+// DARK / LIGHT MODE
+// ================================
 
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark-mode");
+const themeToggle = document.getElementById("themeToggle");
+
+
+function loadTheme() {
+
+    const savedTheme = localStorage.getItem("meloTheme");
+
+
+    if(savedTheme === "dark") {
+
+        document.body.classList.add("dark-mode");
+
+    }
+
 }
 
-themeBtn?.addEventListener("click",()=>{
+
+
+function toggleTheme() {
 
     document.body.classList.toggle("dark-mode");
+
+
+    const theme = document.body.classList.contains("dark-mode")
+        ? "dark"
+        : "light";
+
+
+    localStorage.setItem("meloTheme", theme);
+
+
+    showNotification(
+        `${theme} mode activated`,
+        "success"
+    );
+
+}
+
+
+
+if(themeToggle){
+
+    themeToggle.addEventListener(
+        "click",
+        toggleTheme
+    );
+
+}
+
+
+loadTheme();
+
+
+
+// ================================
+// LOGIN CHECK
+// ================================
+
+function isLoggedIn(){
+
+    return getCurrentUser() !== null;
+
+}
+
+
+
+// ================================
+// SAFE PAGE START
+// ================================
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+    console.log(
+        "MeloSave Pro V2 Loaded 🚀"
+    );
+
+
+});    if(!user) return;
+
+    const hour = new Date().getHours();
+
+    let text = "";
+
+    if(hour < 12){
+
+        text = "Good Morning";
+
+    }else if(hour < 18){
+
+        text = "Good Afternoon";
+
+    }else{
+
+        text = "Good Evening";
+
+    }
+
+    greeting.textContent = `${text}, ${user.name} 👋`;
+
+}
+
+updateGreeting();    document.body.classList.toggle("dark-mode");
 
     if(document.body.classList.contains("dark-mode")){
 
@@ -209,5 +356,281 @@ if(user){
         savings.textContent="₦"+user.savings.toLocaleString();
 
     }
+
+}
+// ==========================================
+// PART 2 - SIGN UP
+// ==========================================
+
+const signupForm = document.getElementById("signupForm");
+
+if (signupForm) {
+
+    signupForm.addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+
+            showNotification("❌ Passwords do not match!");
+
+            return;
+
+        }
+
+        const user = {
+            name,
+            email,
+            password,
+            balance: 0,
+            income: 0,
+            expenses: 0,
+            savings: 0,
+            transactions: []
+        };
+
+        saveUser(user);
+
+        showNotification(`🎉 Welcome to MeloSave, ${name}!`);
+
+        setTimeout(() => {
+
+            window.location.href = "login.html";
+
+        }, 1800);
+
+    });
+
+            }
+// ==========================================
+// PART 3 - LOGIN
+// ==========================================
+
+const loginForm = document.getElementById("loginForm");
+
+if (loginForm) {
+
+    loginForm.addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
+
+        const user = getUser();
+
+        if (!user) {
+
+            showNotification("❌ No account found. Please create one first.");
+
+            return;
+
+        }
+
+        if (email === user.email && password === user.password) {
+
+            localStorage.setItem("loggedIn", "true");
+
+            showNotification(`👋 Welcome back, ${user.name}!`);
+
+            setTimeout(() => {
+
+                window.location.href = "dashboard.html";
+
+            }, 1800);
+
+        } else {
+
+            showNotification("❌ Incorrect email or password.");
+
+        }
+
+    });
+
+}
+
+// ==========================================
+// PROTECT DASHBOARD & PROFILE
+// ==========================================
+
+const currentPage = window.location.pathname;
+
+if (
+    (currentPage.includes("dashboard.html") ||
+     currentPage.includes("profile.html")) &&
+    localStorage.getItem("loggedIn") !== "true"
+) {
+
+    window.location.href = "login.html";
+
+}
+
+// =====================================
+// MELOSAVE PRO V2
+// PART 2: MULTI-USER SIGNUP
+// =====================================
+
+
+// ================================
+// CREATE ACCOUNT
+// ================================
+
+function createAccount(name, email, password) {
+
+
+    // Remove extra spaces
+    name = name.trim();
+    email = email.trim().toLowerCase();
+    password = password.trim();
+
+
+
+    // Check empty fields
+
+    if(name === "" || email === "" || password === "") {
+
+        showNotification(
+            "Please fill in all fields",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+
+    // Get existing users
+
+    let users = getUsers();
+
+
+
+    // Check duplicate email
+
+    const existingUser = users.find(
+        user => user.email === email
+    );
+
+
+    if(existingUser){
+
+        showNotification(
+            "Email already exists",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+
+
+    // Create new user
+
+    const newUser = {
+
+        id: Date.now(),
+
+        name: name,
+
+        email: email,
+
+        password: password,
+
+        data: createDefaultData()
+
+    };
+
+
+
+
+    // Save user
+
+    users.push(newUser);
+
+    saveUsers(users);
+
+
+
+    // Automatically login user
+
+    saveCurrentUser(newUser);
+
+
+
+    showNotification(
+        "Account created successfully 🎉",
+        "success"
+    );
+
+
+
+    return true;
+
+}
+
+
+
+
+// ================================
+// SIGNUP FORM CONNECTION
+// ================================
+
+
+const signupForm = document.getElementById("signupForm");
+
+
+if(signupForm){
+
+
+    signupForm.addEventListener(
+    "submit",
+    function(e){
+
+
+        e.preventDefault();
+
+
+
+        const name =
+        document.getElementById("signupName").value;
+
+
+        const email =
+        document.getElementById("signupEmail").value;
+
+
+        const password =
+        document.getElementById("signupPassword").value;
+
+
+
+        const created =
+        createAccount(
+            name,
+            email,
+            password
+        );
+
+
+
+        if(created){
+
+            // Change this later if your dashboard page name is different
+
+            window.location.href = "dashboard.html";
+
+        }
+
+
+    });
+
 
 }
